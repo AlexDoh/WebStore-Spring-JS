@@ -109,7 +109,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                     }
             );
         } catch (Exception e) {
-            throw new RuntimeException("There are problems with authentication" + e);
+            throw new RuntimeException("You have corrupted cookies in the browser, please clean them");
         }
     }
 

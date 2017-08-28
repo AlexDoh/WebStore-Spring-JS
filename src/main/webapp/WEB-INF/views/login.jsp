@@ -22,15 +22,15 @@
         <spring:label path="name" class="sr-only">Email address</spring:label>
         <spring:input type="text" path="name" id="username" class="form-control" placeholder="Username"/>
         <spring:label path="password" class="sr-only">Password</spring:label>
-        <spring:input type="password" path="password" class="form-control" placeholder="Password" />
+        <spring:input type="password" path="password" class="form-control" placeholder="Password"/>
         <div class="checkbox">
-            <label>
-                <input type="checkbox" value="remember-me"> Remember me
-            </label>
+            <spring:label path="token">
+                <spring:checkbox path="token" value="true"/>Remember me
+                <spring:hidden path="token" value="false"/>
+            </spring:label>
         </div>
         <spring:button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</spring:button>
     </spring:form>
-
 </div>
 </body>
 </html>

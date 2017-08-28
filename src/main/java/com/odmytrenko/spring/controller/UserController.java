@@ -39,11 +39,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
-    public ModelAndView profile(@ModelAttribute("user") User user, HttpServletResponse response) {
+    public ModelAndView profile(@ModelAttribute("user") User user, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mv = new ModelAndView();
         User userInput = userService.getByUsername(user.getName(), user.getPassword());
         if (user.getPassword().equals(userInput.getPassword())) {
-            response.addCookie(new Cookie("TOKEN", userInput.getToken()));
+            if (Boolean.parseBoolean(request.getParameter("token"))) {
+                response.addCookie(new Cookie("TOKEN", userInput.getToken()));
+            }
             mv.setViewName("profile");
             mv.addObject("message", "Login successful!");
         }

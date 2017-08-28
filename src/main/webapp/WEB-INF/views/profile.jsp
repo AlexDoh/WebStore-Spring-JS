@@ -7,7 +7,7 @@
 <body>
 <h3>Hello <c:out value="${user.name}"/>!!!</h3><br>
 <c:set var = "image" value = "${pageContext.request.contextPath}/images/${user.name}.jpg"/>
-<img src="<c:out value = "${image}"/>" alt="(User has no profile image)" height="200" width="200">
+<img src="<c:url value="/resources/images/${user.name}.jpg"/>" alt="(User has no profile image)" height="200" width="200">
 <form method="get" action="<c:url value="/filter/"/>">
     <button name="logout" style="position: relative;bottom: -40px;">LogOut</button>
 </form><br>

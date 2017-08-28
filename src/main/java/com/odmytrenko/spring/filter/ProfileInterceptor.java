@@ -11,7 +11,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class ProfileInterceptor extends HandlerInterceptorAdapter {
@@ -33,8 +32,6 @@ public class ProfileInterceptor extends HandlerInterceptorAdapter {
                         User user = userDao.findByToken(token);
                         request.setAttribute("user", user);
                         request.getRequestDispatcher("/WEB-INF/views/profile.jsp").forward(request, response);
-                    } catch (NullPointerException e) {
-                        throw new RuntimeException("You have corrupted cookies in the browser, please clean them");
                     } catch (ServletException | IOException e) {
                         throw new RuntimeException(e);
                     }
