@@ -35,10 +35,10 @@
             </div>
 
             <div class="inner cover">
-                <h1 class="cover-heading">Cover your page.</h1>
-                <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
+                <h1 class="cover-heading">Simple WebStore</h1>
+                <p class="lead">We offer you to take a look to the list of all our products by categories</p>
                 <p class="lead">
-                    <a href="#" class="btn btn-lg btn-default">Learn more</a>
+                    <a href="<c:url value="/categories"/>" class="btn btn-lg btn-default">Categories</a>
                 </p>
             </div>
 

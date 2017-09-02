@@ -3,7 +3,6 @@ package com.odmytrenko.spring.filter;
 import com.odmytrenko.spring.dao.UserDao;
 import com.odmytrenko.spring.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.ServletException;
@@ -41,17 +40,5 @@ public class ProfileInterceptor extends HandlerInterceptorAdapter {
         } else {
             return true;
         }
-    }
-
-    @Override
-    public void postHandle(HttpServletRequest request,
-                           HttpServletResponse response, Object handler,
-                           ModelAndView modelAndView) throws Exception {
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request,
-                                HttpServletResponse response, Object handler, Exception ex)
-            throws Exception {
     }
 }

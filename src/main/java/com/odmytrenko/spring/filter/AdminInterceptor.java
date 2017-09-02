@@ -1,6 +1,7 @@
 package com.odmytrenko.spring.filter;
 
 import com.odmytrenko.spring.dao.UserDao;
+import com.odmytrenko.spring.model.Roles;
 import com.odmytrenko.spring.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -10,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
-public class LoginInterceptor extends HandlerInterceptorAdapter {
+public class AdminInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private UserDao userDao;
@@ -23,15 +24,13 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         if (cookies != null && Arrays.stream(cookies).anyMatch(p -> p.getName().equals("TOKEN"))) {
             User user = userDao.findByToken(Arrays.stream(cookies).filter(p -> p.getName().equals("TOKEN")).
                     findFirst().get().getValue());
-            if (user != null) {
-                request.setAttribute("user", user);
-                request.getRequestDispatcher("/WEB-INF/views/profile.jsp").forward(request, response);
-                return false;
+            if (!user.getRoles().contains(Roles.ADMIN)) {
+                throw new RuntimeException("User doesn't have privileges to enter this page");
             } else {
                 return true;
             }
         } else {
-            return true;
+            throw new RuntimeException("You must be logged on to enter this page");
         }
     }
 }
