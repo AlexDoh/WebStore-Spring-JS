@@ -4,12 +4,12 @@ import com.odmytrenko.spring.model.Roles;
 import com.odmytrenko.spring.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 @Repository
@@ -113,6 +113,35 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         }
     }
 
+    @Override
+    public Set<User> getAll() {
+        Map<String, User> userMap = new HashMap<>();
+        jdbcTemplate.query("SELECT U.ID, U.USERNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME" +
+                " FROM USERS U" +
+                " JOIN USERTOROLE UR ON UR.USERID=U.ID" +
+                " JOIN ROLES R ON R.ID = UR.ROLEID", (rs, rowNum) -> {
+            User user = new User();
+            String userName = rs.getString("USERNAME");
+            String roleName = rs.getString("NAME");
+            user.setId(rs.getLong("ID"));
+            user.setName(userName);
+            user.setPassword(rs.getString("PASSWORD"));
+            user.setEmail(rs.getString("EMAIL"));
+            user.setToken(rs.getString("TOKEN"));
+            if (userMap.containsKey(userName)) {
+                userMap.get(userName).getRoles().add(
+                        Roles.valueOf(roleName));
+            } else {
+                Set<Roles> roles = new HashSet<>();
+                roles.add(Roles.valueOf(roleName));
+                user.setRoles(roles);
+                userMap.put(userName, user);
+            }
+            return user;
+        });
+        return new HashSet<>(userMap.values());
+    }
+
     private Set<Roles> getUserRolesFromQuery(ResultSet rs) throws SQLException {
         Set<Roles> roles = new HashSet<>();
         roles.add(Roles.valueOf(rs.getString("NAME")));
@@ -129,21 +158,25 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     @Override
     public User create(User user) {
         String createUserQuery = "INSERT INTO USERS (USERNAME, TOKEN, PASSWORD, EMAIL) VALUES(?, ?, ?, ?);";
+        String addRoleQuery = "INSERT INTO USERTOROLE (USERID, ROLEID) VALUES(" +
+                "(SELECT ID FROM USERS WHERE USERNAME = ?), 2);";
         jdbcTemplate.update(createUserQuery,
                 user.getName(),
                 user.getToken(),
                 user.getPassword(),
                 user.getEmail()
         );
-        String addRoleQuery = "INSERT INTO USERTOROLE (USERID, ROLEID) VALUES(" +
-                "(SELECT ID FROM USERS WHERE USERNAME = ?), 2);";
         jdbcTemplate.update(addRoleQuery, user.getName());
         return user;
     }
 
     @Override
     public User delete(User user) {
-        return null;
+        String deleteUserRoleQuery = "DELETE FROM USERTOROLE WHERE USERID = (SELECT ID FROM USERS WHERE USERNAME = ?);";
+        String deleteUserQuery = "DELETE FROM USERS WHERE USERNAME = ?;";
+        jdbcTemplate.update(deleteUserRoleQuery, user.getName());
+        jdbcTemplate.update(deleteUserQuery, user.getName());
+        return user;
     }
 
     @Override

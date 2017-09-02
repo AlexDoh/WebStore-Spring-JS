@@ -64,7 +64,7 @@ public class UserController {
         ModelAndView mv = new ModelAndView();
         user.setToken(user.getName() + System.nanoTime());
         userService.create(user);
-        mv.addObject("object", user);
+        mv.addObject("name", user.getName());
         mv.addObject("type", "User");
         mv.setViewName("performedAction");
         return mv;

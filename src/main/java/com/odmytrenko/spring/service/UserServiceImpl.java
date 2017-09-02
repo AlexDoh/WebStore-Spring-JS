@@ -5,6 +5,8 @@ import com.odmytrenko.spring.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -39,5 +41,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long id) {
         return userDao.findById(id);
+    }
+
+    @Override
+    public Set<User> getAll() {
+        return userDao.getAll();
     }
 }

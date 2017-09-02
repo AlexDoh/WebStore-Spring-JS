@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Hello, Admin!</h1>
-<a href="${pageContext.request.contextPath}/filter/adminconsole/usermanagement"
+<a href="${pageContext.request.contextPath}/adminconsole/usermanagement"
    style="position: relative;bottom: -5px;"><h3>User management</h3></a><br>
 <h3>Category manipulation:</h3><br>
 <h3 style="display:inline-block;margin-right:15px">Present Categories:</h3>

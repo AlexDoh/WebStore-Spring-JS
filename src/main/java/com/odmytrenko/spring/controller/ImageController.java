@@ -39,9 +39,7 @@ public class ImageController {
         }
         ModelAndView mv = new ModelAndView();
         mv.setViewName("performedAction");
-        User user = new User();
-        user.setName(userName);
-        mv.addObject("object", user);
+        mv.addObject("name", userName);
         mv.addObject("type", "Image for");
         return mv;
     }
