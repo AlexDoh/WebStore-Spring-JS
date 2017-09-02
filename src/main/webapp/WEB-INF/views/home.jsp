@@ -8,10 +8,7 @@
 
     <title>Home Page</title>
 
-    <!-- Bootstrap core CSS -->
     <link href="<c:url value="/resources/bootstrap/css/bootstrap.css"/>" rel="stylesheet">
-
-   <!-- Custom styles for this template -->
     <link href="<c:url value="/resources/bootstrap/css/cover.css"/>" rel="stylesheet">
 
 </head>

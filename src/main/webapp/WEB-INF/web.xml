@@ -12,6 +12,13 @@
             /WEB-INF/dispatcher-servlet.xml
         </param-value>
     </context-param>
+    <context-param>
+        <description>Location to store uploaded images</description>
+        <param-name>imageStore</param-name>
+        <param-value>
+            C:\Users\Alex\IdeaProjects\JavaHomeTasks\WebStore-Spring-JS\src\main\java\data\images\
+        </param-value>
+    </context-param>
 
     <servlet>
         <servlet-name>dispatcher</servlet-name>

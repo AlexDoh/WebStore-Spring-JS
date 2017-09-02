@@ -15,7 +15,7 @@
         }
     %>
     ${requestScope.object.name} processed</h1>
-<a href="${pageContext.request.contextPath}/filter/"
+<a href="${pageContext.request.contextPath}/"
    style="position: relative;bottom: -20px;">Back to main page</a><br>
 </body>
 </html>
