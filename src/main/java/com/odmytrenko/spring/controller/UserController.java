@@ -37,7 +37,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
-    public ModelAndView profile(@ModelAttribute("user") User user, HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView profile(@ModelAttribute("user") User user, HttpServletRequest request,
+                                HttpServletResponse response) {
         ModelAndView mv = new ModelAndView();
         User userInput = userService.getByUsername(user.getName(), user.getPassword());
         if (user.getPassword().equals(userInput.getPassword())) {
@@ -47,6 +48,25 @@ public class UserController {
             mv.setViewName("profile");
             mv.addObject("message", "Login successful!");
         }
+        return mv;
+    }
+
+    @RequestMapping(value = "/registration")
+    public ModelAndView registration() {
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("user", new User());
+        mv.setViewName("registration");
+        return mv;
+    }
+
+    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    public ModelAndView registration(@ModelAttribute("user") User user) {
+        ModelAndView mv = new ModelAndView();
+        user.setToken(user.getName() + System.nanoTime());
+        userService.create(user);
+        mv.addObject("object", user);
+        mv.addObject("type", "User");
+        mv.setViewName("performedAction");
         return mv;
     }
 }

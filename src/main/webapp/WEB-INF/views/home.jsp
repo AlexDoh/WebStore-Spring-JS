@@ -23,11 +23,11 @@
 
             <div class="masthead clearfix">
                 <div class="inner">
-                    <h3 class="masthead-brand">Cover</h3>
+                    <h3 class="masthead-brand"><a href="<c:url value="/adminconsole"/>">Admin console</a></h3>
                     <nav>
                         <ul class="nav masthead-nav">
                             <li class="active"><a href="<c:url value="/login"/>">Login</a></li>
-                            <li><a href="#">Features</a></li>
+                            <li class="active"><a href="<c:url value="/registration"/>">Registration</a></li>
                             <li><a href="#">Contact</a></li>
                         </ul>
                     </nav>

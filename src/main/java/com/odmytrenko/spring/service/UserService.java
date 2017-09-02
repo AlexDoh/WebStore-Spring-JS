@@ -8,4 +8,12 @@ public interface UserService {
 
     User findByToken(String token);
 
+    User create(User user);
+
+    User delete(User user);
+
+    User update(User user);
+
+    User findById(Long id);
+
 }

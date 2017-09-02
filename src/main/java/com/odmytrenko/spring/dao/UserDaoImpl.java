@@ -128,7 +128,17 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public User create(User user) {
-        return null;
+        String createUserQuery = "INSERT INTO USERS (USERNAME, TOKEN, PASSWORD, EMAIL) VALUES(?, ?, ?, ?);";
+        jdbcTemplate.update(createUserQuery,
+                user.getName(),
+                user.getToken(),
+                user.getPassword(),
+                user.getEmail()
+        );
+        String addRoleQuery = "INSERT INTO USERTOROLE (USERID, ROLEID) VALUES(" +
+                "(SELECT ID FROM USERS WHERE USERNAME = ?), 2);";
+        jdbcTemplate.update(addRoleQuery, user.getName());
+        return user;
     }
 
     @Override
