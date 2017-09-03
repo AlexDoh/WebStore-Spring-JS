@@ -16,6 +16,9 @@ public class ProductDaoImpl implements ProductDao {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    CategoryDao categoryDao;
+
     public ProductDaoImpl(JdbcTemplate jt) {
         jdbcTemplate = jt;
         String createProductsTable = "CREATE TABLE IF NOT EXISTS PRODUCTS (" +
@@ -110,6 +113,15 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Set<Product> getAll() {
-        return null;
+        String getAll = "SELECT ID, CATEGORYID, NAME, DESCRIPTION FROM PRODUCTS;";
+        List<Product> results = jdbcTemplate.query(getAll, (rs, rowNum) -> {
+            Product product = new Product();
+            product.setId(rs.getLong("ID"));
+            product.setName(rs.getString("NAME"));
+            product.setDescription(rs.getString("DESCRIPTION"));
+            product.setCategory(categoryDao.findById(rs.getLong("CATEGORYID")));
+            return product;
+        });
+        return new HashSet<>(results);
     }
 }

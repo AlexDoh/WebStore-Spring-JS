@@ -4,6 +4,8 @@ import com.odmytrenko.spring.model.Category;
 import com.odmytrenko.spring.model.Product;
 import com.odmytrenko.spring.model.Roles;
 import com.odmytrenko.spring.model.User;
+import com.odmytrenko.spring.service.CategoryService;
+import com.odmytrenko.spring.service.ProductService;
 import com.odmytrenko.spring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,12 +20,18 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private CategoryService categoryService;
 
     @RequestMapping(value = "/adminconsole")
     public ModelAndView admin() {
         ModelAndView mv = new ModelAndView();
         mv.addObject("category", new Category());
         mv.addObject("product", new Product());
+        mv.addObject("categories", categoryService.getAll());
+        mv.addObject("products", productService.getAll());
         mv.setViewName("adminConsole");
         return mv;
     }
@@ -73,6 +81,20 @@ public class AdminController {
         ModelAndView mv = new ModelAndView();
         mv.addObject("name", user.getName());
         mv.addObject("type", "User");
+        mv.setViewName("performedAction");
+        return mv;
+    }
+
+    @RequestMapping(value = "/adminconsole/managecategory", method = RequestMethod.POST)
+    public ModelAndView manageCategory(@ModelAttribute("category") Category category, @RequestParam String action) {
+        if (action.equals("add")) {
+            categoryService.create(category);
+        } else if (action.equals("delete")) {
+            categoryService.delete(category);
+        }
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("name", category.getName());
+        mv.addObject("type", "Category");
         mv.setViewName("performedAction");
         return mv;
     }

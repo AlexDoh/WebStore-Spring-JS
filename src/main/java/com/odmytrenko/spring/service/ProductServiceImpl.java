@@ -40,6 +40,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Set<Product> getAll() {
-        return null;
+        return productDao.getAll();
     }
 }

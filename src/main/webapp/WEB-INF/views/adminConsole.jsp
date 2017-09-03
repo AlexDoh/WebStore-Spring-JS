@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -13,8 +14,7 @@
 <c:forEach var="c" items="${categories}">
     <h4 style="display:inline-block;margin-right:5px"><i>${c.name}</i></h4>
 </c:forEach>
-<form method="post" action="<c:url value="/filter/adminconsole/performedaction"/>" id="category">
-    <input type="hidden" name="type" value="Category"/>
+<spring:form modelAttribute="category" method="post" action="/adminconsole/managecategory" id="category">
     <ul style="list-style: none">
         <li>Category action:
             <select title="Category action" name="action" form="category" style="position: relative;top: -5px">
@@ -23,19 +23,18 @@
             </select>
         </li>
         <li>Category name:
-            <input title="Category name" type="text" name="categoryName"></li>
+            <spring:input title="Category name" type="text" name="categoryName" path="name"/></li>
     </ul>
     <br>
     <input type="submit" value="Submit" style="position: relative;bottom: 20px">
-</form>
+</spring:form>
 <h3>Product manipulation:</h3>
 <h3 style="display:inline-block;margin-right:15px">Present products:</h3>
 <c:forEach var="p" items="${products}">
     <h4 style="display:inline-block;margin-right:5px"><i>${p.name}</i></h4><h5
         style="display:inline-block;margin-right:5px">(${p.category.name})</h5>
 </c:forEach>
-<form method="post" action="<c:url value="/filter/adminconsole/performedaction"/>" id="product">
-    <input type="hidden" name="type" value="Product"/>
+<form method="post" action="<c:url value="/adminconsole/manageproduct"/>" id="product">
     <ul style="list-style: none">
         <li>Choose product operation:
             <select title="Product action" name="action" form="product" style="position: relative;top: -5px">
@@ -61,6 +60,6 @@
     <br>
     <input type="submit" value="Submit" style="position: relative;bottom: 5px">
 </form>
-<a href="${pageContext.request.contextPath}/filter/" style="position: relative;bottom: -35px;">Back</a><br>
+<a href="${pageContext.request.contextPath}/" style="position: relative;bottom: -35px;">Back</a><br>
 </body>
 </html>

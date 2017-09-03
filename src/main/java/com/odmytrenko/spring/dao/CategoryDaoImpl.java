@@ -44,17 +44,32 @@ public class CategoryDaoImpl extends AbstractDao<Category> implements CategoryDa
 
     @Override
     public Category create(Category category) {
-        return null;
+        String categoryName = category.getName();
+        if (doesCategoryExist(categoryName)) {
+            throw new RuntimeException("Such category is already exist");
+        }
+        String createCategoryQuery = "INSERT INTO CATEGORIES (NAME) VALUES(?);";
+        jdbcTemplate.update(createCategoryQuery, categoryName);
+        return category;
     }
 
     @Override
     public Category delete(Category category) {
-        return null;
+        String categoryName = category.getName();
+        if (!doesCategoryExist(categoryName)) {
+            throw new RuntimeException("There is no such category");
+        }
+        String deleteProductsInCategoryQuery = "DELETE FROM PRODUCTS WHERE CATEGORYID = (SELECT ID FROM CATEGORIES" +
+                " WHERE NAME = ?);";
+        String deleteCategoryQuery = "DELETE FROM CATEGORIES WHERE NAME = ?;";
+        jdbcTemplate.update(deleteProductsInCategoryQuery, categoryName);
+        jdbcTemplate.update(deleteCategoryQuery, categoryName);
+        return category;
     }
 
     @Override
     public Category update(Category category) {
-        return null;
+        throw new RuntimeException("Update category through product update procedure");
     }
 
     @Override
@@ -73,5 +88,9 @@ public class CategoryDaoImpl extends AbstractDao<Category> implements CategoryDa
         } catch (Exception e) {
             throw new RuntimeException("Category doesn't exist!");
         }
+    }
+
+    private boolean doesCategoryExist(String categoryName) {
+        return jdbcTemplate.queryForRowSet("SELECT * FROM CATEGORIES WHERE NAME = ?;", categoryName).next();
     }
 }
