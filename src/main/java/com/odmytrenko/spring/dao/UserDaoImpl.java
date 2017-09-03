@@ -181,7 +181,20 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public User update(User user) {
-        return null;
+        String updateUserQuery = "UPDATE USERS SET PASSWORD = ?, EMAIL = ? WHERE USERNAME = ?;";
+        String deleteUserRoleQuery = "DELETE FROM USERTOROLE WHERE USERID = (SELECT ID FROM USERS WHERE USERNAME = ?);";
+        String insertUserRoleQuery = "INSERT INTO USERTOROLE (USERID, ROLEID) VALUES((SELECT ID FROM USERS WHERE USERNAME = ?), (SELECT ID FROM ROLES WHERE NAME = ?));";
+        jdbcTemplate.update(updateUserQuery,
+                user.getPassword(),
+                user.getEmail(),
+                user.getName()
+        );
+        jdbcTemplate.update(deleteUserRoleQuery, user.getName());
+        user.getRoles().stream().map(Enum::toString).forEach(r -> jdbcTemplate.update(insertUserRoleQuery,
+                user.getName(),
+                r
+        ));
+        return user;
     }
 
     @Override

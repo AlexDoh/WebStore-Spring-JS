@@ -2,10 +2,12 @@ package com.odmytrenko.spring.controller;
 
 import com.odmytrenko.spring.model.Category;
 import com.odmytrenko.spring.model.Product;
+import com.odmytrenko.spring.model.Roles;
 import com.odmytrenko.spring.model.User;
 import com.odmytrenko.spring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,6 +52,26 @@ public class AdminController {
         userService.delete(user);
         ModelAndView mv = new ModelAndView();
         mv.addObject("name", userName);
+        mv.addObject("type", "User");
+        mv.setViewName("performedAction");
+        return mv;
+    }
+
+    @RequestMapping(value = "/adminconsole/manageuser")
+    public ModelAndView updateUser(@ModelAttribute("user") User user) {
+        ModelAndView mv = new ModelAndView();
+        user.setRoles(userService.getByUsernameAndPassword(user.getName(), user.getPassword()).getRoles());
+        mv.addObject("user", user);
+        mv.addObject("allRoles", Roles.values());
+        mv.setViewName("manageUser");
+        return mv;
+    }
+
+    @RequestMapping(value = "/adminconsole/manageuser", method = RequestMethod.POST)
+    public ModelAndView updateUserMenu(@ModelAttribute("user") User user) {
+        userService.update(user);
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("name", user.getName());
         mv.addObject("type", "User");
         mv.setViewName("performedAction");
         return mv;

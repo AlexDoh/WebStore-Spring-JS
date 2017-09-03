@@ -40,7 +40,7 @@ public class UserController {
     public ModelAndView profile(@ModelAttribute("user") User user, HttpServletRequest request,
                                 HttpServletResponse response) {
         ModelAndView mv = new ModelAndView();
-        User userInput = userService.getByUsername(user.getName(), user.getPassword());
+        User userInput = userService.getByUsernameAndPassword(user.getName(), user.getPassword());
         if (user.getPassword().equals(userInput.getPassword())) {
             if (Boolean.parseBoolean(request.getParameter("token"))) {
                 response.addCookie(new Cookie("TOKEN", userInput.getToken()));

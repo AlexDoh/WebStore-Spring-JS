@@ -11,11 +11,12 @@
     <p>
     <h4 style="display:inline-block;margin-right:5px">Account name: </h4>
     <h3 style="display:inline-block;margin-right:5px"><i><c:out value="${u.name}"/></i></h3>
-    <form method="post" id="edit" action="<c:url value="/adminconsole/manageuser"/>"
-          style="display:inline-block;margin-right:10px">
-        <input type="hidden" name="password" value="${u.password}"/>
-        <button name="userName" title="Edit user" form="edit" value="<c:out value="${u.name}"/>">Edit</button>
-    </form>
+    <spring:form method="get" modelAttribute="user" id="edit" action="/adminconsole/manageuser"
+                 style="display:inline-block;margin-right:10px">
+        <spring:hidden value="${u.name}" path="name"/>
+        <spring:hidden value="${u.password}" path="password"/>
+        <spring:button title="Edit user" form="edit">Edit</spring:button>
+    </spring:form>
     <form id="delete" action="<c:url value="/adminconsole/deleteuser"/>"
           style="display:inline-block;margin-right:10px">
         <button name="userName" title="Delete user" form="delete" value="<c:out value="${u.name}"/>">Delete</button>

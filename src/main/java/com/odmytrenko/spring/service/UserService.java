@@ -6,7 +6,7 @@ import java.util.Set;
 
 public interface UserService {
 
-    User getByUsername(String username, String password);
+    User getByUsernameAndPassword(String username, String password);
 
     User findByToken(String token);
 
