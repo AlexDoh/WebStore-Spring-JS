@@ -5,7 +5,7 @@
     <title>Products</title>
 </head>
 <body>
-<form method="post" action="<c:url value="/filter/product"/>">
+<form method="post" action="<c:url value="/product"/>">
     Find product by id:
     <input title="Find product by id:" type="text" name="id" style="position: relative;top: -5px"><br>
     <input type="submit" value="Submit" style="position: relative;bottom: -10px">
@@ -15,6 +15,6 @@
 <c:forEach var="p" items="${products}">
     <h1><c:out value="${p.name} (${p.description})"/></h1>
 </c:forEach>
-<a href="${pageContext.request.contextPath}/filter/categories" style="position: relative;bottom: -20px">Back</a><br>
+<a href="${pageContext.request.contextPath}/categories" style="position: relative;bottom: -20px">Back</a><br>
 </body>
 </html>

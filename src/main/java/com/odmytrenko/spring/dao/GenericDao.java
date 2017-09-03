@@ -1,5 +1,7 @@
 package com.odmytrenko.spring.dao;
 
+import java.util.Set;
+
 public interface GenericDao<T> {
 
     T create(T t);
@@ -9,4 +11,6 @@ public interface GenericDao<T> {
     T update(T t);
 
     T findById(Long id);
+
+    Set<T> getAll();
 }

@@ -28,4 +28,9 @@ public class Category extends Model {
     public int hashCode() {
         return getName() != null ? getName().hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
