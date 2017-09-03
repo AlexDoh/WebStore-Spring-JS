@@ -88,7 +88,24 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product findById(Long id) {
-        return null;
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT CATEGORYID, NAME, DESCRIPTION FROM PRODUCTS WHERE ID = ?;",
+                    new Object[]{id},
+                    (rs, rowNum) -> {
+                        Product result = new Product();
+                        result.setId(id);
+                        result.setName(rs.getString("NAME"));
+                        result.setDescription(rs.getString("DESCRIPTION"));
+                        Category category = new Category();
+                        category.setId(rs.getLong("CATEGORYID"));
+                        result.setCategory(category);
+                        return result;
+                    }
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Category doesn't exist!");
+        }
     }
 
     @Override

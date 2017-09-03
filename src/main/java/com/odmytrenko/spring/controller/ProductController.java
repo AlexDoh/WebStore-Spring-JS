@@ -27,10 +27,11 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/product")
-    public ModelAndView findCategory(@RequestParam Long id) {
+    public ModelAndView findCategory(@RequestParam Long id, @RequestParam String category) {
         ModelAndView mv = new ModelAndView();
-        mv.addObject("category", productService.findById(id));
-        mv.setViewName("category");
+        mv.addObject("product", productService.findById(id));
+        mv.addObject("category", category);
+        mv.setViewName("product");
         return mv;
     }
 }
