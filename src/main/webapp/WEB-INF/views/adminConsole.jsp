@@ -34,7 +34,7 @@
     <h4 style="display:inline-block;margin-right:5px"><i>${p.name}</i></h4><h5
         style="display:inline-block;margin-right:5px">(${p.category.name})</h5>
 </c:forEach>
-<form method="post" action="<c:url value="/adminconsole/manageproduct"/>" id="product">
+<spring:form modelAttribute="product" method="post" action="/adminconsole/manageproduct" id="product">
     <ul style="list-style: none">
         <li>Choose product operation:
             <select title="Product action" name="action" form="product" style="position: relative;top: -5px">
@@ -44,22 +44,22 @@
             </select>
         </li>
         <li style="position: relative;bottom: -5px">Product name:
-            <input title="Product name" type="text" name="productName"></li>
+            <spring:input title="Product name" type="text" name="productName" path="name"/></li>
         <li style="position: relative;bottom: -10px">Product description:
-            <input title="Product description" type="text" name="productDescription"></li>
+            <spring:input title="Product description" type="text" name="productDescription" path="description"/></li>
         <li style="position: relative;bottom: -15px">Category name for product:
-            <select title="Product categoryName" name="productCategoryId" form="product">
+            <spring:select title="Product categoryName" name="productCategoryId" form="product" path="category.id">
                 <c:forEach var="c" items="${categories}">
-                    <option value="${c.id}">
-                        <c:out value="${c.name}"/>
-                    </option>
+                    <spring:option value="${c.id}">
+                        ${c.name}
+                    </spring:option>
                 </c:forEach>
-            </select>
+            </spring:select>
         </li>
     </ul>
     <br>
     <input type="submit" value="Submit" style="position: relative;bottom: 5px">
-</form>
+</spring:form>
 <a href="${pageContext.request.contextPath}/" style="position: relative;bottom: -35px;">Back</a><br>
 </body>
 </html>

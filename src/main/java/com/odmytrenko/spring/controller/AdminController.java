@@ -87,14 +87,37 @@ public class AdminController {
 
     @RequestMapping(value = "/adminconsole/managecategory", method = RequestMethod.POST)
     public ModelAndView manageCategory(@ModelAttribute("category") Category category, @RequestParam String action) {
-        if (action.equals("add")) {
-            categoryService.create(category);
-        } else if (action.equals("delete")) {
-            categoryService.delete(category);
+        switch (action) {
+            case "add":
+                categoryService.create(category);
+                break;
+            case "delete":
+                categoryService.delete(category);
+                break;
         }
         ModelAndView mv = new ModelAndView();
         mv.addObject("name", category.getName());
         mv.addObject("type", "Category");
+        mv.setViewName("performedAction");
+        return mv;
+    }
+
+    @RequestMapping(value = "/adminconsole/manageproduct", method = RequestMethod.POST)
+    public ModelAndView manageProduct(@ModelAttribute("product") Product product, @RequestParam String action) {
+        switch (action) {
+            case "add":
+                productService.create(product);
+                break;
+            case "delete":
+                productService.delete(product);
+                break;
+            case "update":
+                productService.update(product);
+                break;
+        }
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("name", product.getName());
+        mv.addObject("type", "Product");
         mv.setViewName("performedAction");
         return mv;
     }

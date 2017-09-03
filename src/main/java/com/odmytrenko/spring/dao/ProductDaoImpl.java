@@ -76,17 +76,34 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product create(Product product) {
-        return null;
+        String createQuery = "INSERT INTO PRODUCTS (NAME, DESCRIPTION, CATEGORYID) VALUES(?, ?, ?);";
+        jdbcTemplate.update(createQuery,
+                product.getName(),
+                product.getDescription(),
+                product.getCategory().getId()
+        );
+        return product;
     }
 
     @Override
     public Product delete(Product product) {
-        return null;
+        String deleteQuery = "DELETE FROM PRODUCTS WHERE NAME = ? AND CATEGORYID = ?";
+        jdbcTemplate.update(deleteQuery,
+                product.getName(),
+                product.getCategory().getId()
+        );
+        return product;
     }
 
     @Override
     public Product update(Product product) {
-        return null;
+        String updateQuery = "UPDATE PRODUCTS SET DESCRIPTION = ?, CATEGORYID = ? WHERE NAME = ?";
+        jdbcTemplate.update(updateQuery,
+                product.getDescription(),
+                product.getCategory().getId(),
+                product.getName()
+        );
+        return product;
     }
 
     @Override

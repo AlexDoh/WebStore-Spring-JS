@@ -20,17 +20,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product user) {
-        return null;
+        return productDao.create(user);
     }
 
     @Override
     public Product delete(Product user) {
-        return null;
+        return productDao.delete(user);
     }
 
     @Override
     public Product update(Product user) {
-        return null;
+        return productDao.update(user);
     }
 
     @Override
