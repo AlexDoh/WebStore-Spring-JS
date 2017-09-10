@@ -15,6 +15,9 @@ public class CategoryDaoImpl extends AbstractDao<Category> implements CategoryDa
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private ProductDao productDao;
+
     public CategoryDaoImpl(JdbcTemplate jt) {
         jdbcTemplate = jt;
         String createCategoriesTable = "CREATE TABLE IF NOT EXISTS CATEGORIES (" +
@@ -37,6 +40,7 @@ public class CategoryDaoImpl extends AbstractDao<Category> implements CategoryDa
             Category category = new Category();
             category.setId(rs.getLong("ID"));
             category.setName(rs.getString("NAME"));
+            category.setProductList(productDao.getAllByCategoryId(category.getId()));
             return category;
         });
         return new HashSet<>(results);
