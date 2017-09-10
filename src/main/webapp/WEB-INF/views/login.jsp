@@ -16,6 +16,36 @@
 </head>
 <body>
 
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="<c:url value="/"/>">Home</a>
+    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="<c:url value="/profile"/>">Profile <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<c:url value="/profile/settings"/>">Settings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<c:url value="/categories"/>">Categories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<c:url value="/help"/>">Help</a>
+            </li>
+        </ul>
+        <form class="form-inline mt-2 mt-md-0" action="<c:url value="/category"/>">
+            <input class="form-control mr-sm-2" name="id" title="Category id" type="text" placeholder="Put category id"
+                   aria-label="Put category id">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
 <div class="container">
     <spring:form class="form-signin" modelAttribute="user" method="post" action="/profile">
         <h2 class="form-signin-heading">Please sign in</h2>

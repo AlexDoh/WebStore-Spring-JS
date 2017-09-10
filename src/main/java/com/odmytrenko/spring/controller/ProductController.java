@@ -1,5 +1,6 @@
 package com.odmytrenko.spring.controller;
 
+import com.odmytrenko.spring.model.Product;
 import com.odmytrenko.spring.service.CategoryService;
 import com.odmytrenko.spring.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,11 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/product")
-    public ModelAndView findCategory(@RequestParam Long id, @RequestParam String category) {
+    public ModelAndView findProduct(@RequestParam Long id) {
         ModelAndView mv = new ModelAndView();
+        Product product = productService.findById(id);
         mv.addObject("product", productService.findById(id));
-        mv.addObject("category", category);
+        mv.addObject("category", categoryService.findById(product.getCategory().getId()));
         mv.setViewName("product");
         return mv;
     }
