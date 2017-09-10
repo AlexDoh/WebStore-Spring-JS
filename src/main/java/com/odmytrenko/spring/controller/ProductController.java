@@ -18,15 +18,6 @@ public class ProductController {
     @Autowired
     CategoryService categoryService;
 
-    @RequestMapping(value = "/products")
-    public ModelAndView categories(@RequestParam Long categoryId) {
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("products", productService.getAllByCategoryId(categoryId));
-        mv.addObject("category", categoryService.findById(categoryId));
-        mv.setViewName("products");
-        return mv;
-    }
-
     @RequestMapping(value = "/product")
     public ModelAndView findProduct(@RequestParam Long id) {
         ModelAndView mv = new ModelAndView();

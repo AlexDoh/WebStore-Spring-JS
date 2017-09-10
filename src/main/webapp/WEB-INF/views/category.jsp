@@ -32,6 +32,9 @@
                 <a class="nav-link" href="<c:url value="/login"/>">Login</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="<c:url value="/categories"/>">Categories</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/help"/>">Help</a>
             </li>
         </ul>
