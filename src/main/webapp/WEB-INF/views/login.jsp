@@ -24,8 +24,8 @@
         <spring:label path="password" class="sr-only">Password</spring:label>
         <spring:input type="password" path="password" class="form-control" placeholder="Password"/>
         <div class="checkbox">
-            <spring:label path="token">
-                <spring:checkbox path="token" value="true"/>Remember me
+            <spring:label path="token">Remember me
+                <spring:checkbox path="token" value="true"/>
                 <spring:hidden path="token" value="false"/>
             </spring:label>
         </div>
