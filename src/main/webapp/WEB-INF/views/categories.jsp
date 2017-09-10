@@ -58,7 +58,7 @@
                 <c:forEach var="c" items="${categories}">
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="${pageContext.request.contextPath}/products?categoryId=${c.id}"
+                           href="${pageContext.request.contextPath}/category?id=${c.id}"
                            style="font-size: 20px">${c.name}</a>
                     </li>
                 </c:forEach>
@@ -71,7 +71,7 @@
             <section class="row text-center placeholders">
                 <c:forEach var="c" items="${categories}">
                     <div class="col-6 col-sm-3 placeholder">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/products?categoryId=${c.id}"
+                        <a class="nav-link" href="${pageContext.request.contextPath}/category?id=${c.id}"
                            style="font-size: 20px">
                             <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs="
                                  width="200"
@@ -122,4 +122,3 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.5/umd/popper.min.js"></script>
 </body>
 </html>
-

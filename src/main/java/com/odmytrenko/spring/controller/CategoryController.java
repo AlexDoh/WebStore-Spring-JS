@@ -25,6 +25,7 @@ public class CategoryController {
     public ModelAndView findCategory(@RequestParam Long id) {
         ModelAndView mv = new ModelAndView();
         mv.addObject("category", categoryService.findById(id));
+        mv.addObject("categories", categoryService.getAll());
         mv.setViewName("category");
         return mv;
     }

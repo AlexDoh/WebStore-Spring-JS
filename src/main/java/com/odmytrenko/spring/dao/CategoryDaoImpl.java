@@ -86,6 +86,7 @@ public class CategoryDaoImpl extends AbstractDao<Category> implements CategoryDa
                         Category result = new Category();
                         result.setId(id);
                         result.setName(rs.getString("NAME"));
+                        result.setProductList(productDao.getAllByCategoryId(result.getId()));
                         return result;
                     }
             );
