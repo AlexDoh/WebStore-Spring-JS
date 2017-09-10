@@ -69,6 +69,11 @@
             <artifactId>spring-orm</artifactId>
             <version>4.3.10.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jqgrid</artifactId>
+            <version>4.6.0</version>
+        </dependency>
     </dependencies>
 
 </project>
