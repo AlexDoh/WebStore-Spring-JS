@@ -38,10 +38,15 @@
                 <a class="nav-link" href="<c:url value="/help"/>">Help</a>
             </li>
         </ul>
-        <form class="form-inline mt-2 mt-md-0" action="<c:url value="/category"/>">
+        <form class="form-inline mt-2 mt-md-0 mr-5" action="<c:url value="/category"/>">
             <input class="form-control mr-sm-2" name="id" title="Category id" type="text" placeholder="Put category id"
                    aria-label="Put category id">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search category</button>
+        </form>
+        <form class="form-inline mt-2 mt-md-0 ml-5" action="<c:url value="/product"/>">
+            <input class="form-control mr-sm-2" name="id" title="id" type="text" placeholder="Put product id"
+                   aria-label="Put product id">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search product</button>
         </form>
     </div>
 </nav>
