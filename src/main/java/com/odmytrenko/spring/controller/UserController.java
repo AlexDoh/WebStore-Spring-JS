@@ -52,7 +52,7 @@ public class UserController {
                 response.addCookie(new Cookie("TOKEN", userInput.getToken()));
             }
             mv.setViewName("profile");
-            mv.addObject("message", "Login successful!");
+            mv.addObject("user", userInput);
         }
         return mv;
     }

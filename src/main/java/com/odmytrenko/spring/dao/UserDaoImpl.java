@@ -93,7 +93,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     public User findByToken(String token) {
         try {
             return jdbcTemplate.queryForObject(
-                    "SELECT  U.ID, U.USERNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME" +
+                    "SELECT U.ID, U.USERNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME" +
                             " FROM USERS U" +
                             " JOIN USERTOROLE UR ON UR.USERID=U.ID" +
                             " JOIN ROLES R ON R.ID = UR.ROLEID" +
