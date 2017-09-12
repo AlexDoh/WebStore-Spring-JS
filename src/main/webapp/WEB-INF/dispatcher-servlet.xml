@@ -29,15 +29,15 @@
 
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/login"/>
+            <mvc:mapping path="/login/*"/>
             <beans:bean class="com.odmytrenko.spring.filter.LoginInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
-            <mvc:mapping path="/profile"/>
+            <mvc:mapping path="/profile/*"/>
             <beans:bean class="com.odmytrenko.spring.filter.ProfileInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
-            <mvc:mapping path="/adminconsole"/>
+            <mvc:mapping path="/adminconsole/*"/>
             <beans:bean class="com.odmytrenko.spring.filter.AdminInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
