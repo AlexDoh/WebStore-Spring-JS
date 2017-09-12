@@ -9,10 +9,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Signin Template for Bootstrap</title>
+    <title>Signin</title>
 
-    <link href="<c:url value="resources/bootstrap/css/bootstrap.min.css"/>" rel="stylesheet">
-    <link href="<c:url value="resources/bootstrap/css/signin.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/bootstrap/css/bootstrap.min.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/bootstrap/css/signin.css"/>" rel="stylesheet">
 </head>
 <body>
 

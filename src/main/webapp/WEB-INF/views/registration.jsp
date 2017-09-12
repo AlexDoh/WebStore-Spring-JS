@@ -9,12 +9,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Signin Template for Bootstrap</title>
+    <title>Registration</title>
 
-    <link href="<c:url value="resources/bootstrap/css/bootstrap.css"/>" rel="stylesheet">
-    <%--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">--%>
-    <link href="<c:url value="resources/bootstrap/css/signin.css"/>" rel="stylesheet">
-    <link href="<c:url value="resources/bootstrap/css/bootstrap-imageupload.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/bootstrap/css/bootstrap.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/bootstrap/css/signin.css"/>" rel="stylesheet">
+    <link href="<c:url value="/resources/bootstrap/css/bootstrap-imageupload.css"/>" rel="stylesheet">
 
 </head>
 <body>
