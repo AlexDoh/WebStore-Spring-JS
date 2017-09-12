@@ -54,7 +54,7 @@
 <div class="container">
     <spring:form class="form-signin" modelAttribute="user" method="post" action="/profile">
         <h2 class="form-signin-heading">Please sign in</h2>
-        <spring:label path="name" class="sr-only">Email address</spring:label>
+        <spring:label path="name" class="sr-only">Name</spring:label>
         <spring:input type="text" path="name" id="username" class="form-control" placeholder="Username"/>
         <spring:label path="password" class="sr-only">Password</spring:label>
         <spring:input type="password" path="password" class="form-control" placeholder="Password"/>

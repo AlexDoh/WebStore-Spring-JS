@@ -61,7 +61,7 @@ public class UserController {
     public ModelAndView registration() {
         ModelAndView mv = new ModelAndView();
         mv.addObject("user", new User());
-        mv.setViewName("registration1");
+        mv.setViewName("registration");
         return mv;
     }
 

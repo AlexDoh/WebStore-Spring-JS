@@ -85,7 +85,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                     }
             );
         } catch (Exception e) {
-            throw new RuntimeException("User doesn't exist!");
+            throw new RuntimeException("User with such login and password doesn't exist!");
         }
     }
 
