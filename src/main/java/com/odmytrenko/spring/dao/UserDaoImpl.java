@@ -159,6 +159,9 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public User create(User user) {
+        if(doesUserExist(user.getName())) {
+            throw new RuntimeException("Such user already exists");
+        }
         String createUserQuery = "INSERT INTO USERS (USERNAME, TOKEN, PASSWORD, EMAIL) VALUES(?, ?, ?, ?);";
         String addRoleQuery = "INSERT INTO USERTOROLE (USERID, ROLEID) VALUES(" +
                 "(SELECT ID FROM USERS WHERE USERNAME = ?), 2);";
@@ -174,6 +177,9 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public User delete(User user) {
+        if(!doesUserExist(user.getName())) {
+            throw new RuntimeException("There is no such user");
+        }
         String deleteUserRoleQuery = "DELETE FROM USERTOROLE WHERE USERID = (SELECT ID FROM USERS WHERE USERNAME = ?);";
         String deleteUserQuery = "DELETE FROM USERS WHERE USERNAME = ?;";
         jdbcTemplate.update(deleteUserRoleQuery, user.getName());
@@ -185,7 +191,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     public User update(User user) {
         String updateUserQuery = "UPDATE USERS SET PASSWORD = ?, EMAIL = ? WHERE USERNAME = ?;";
         String deleteUserRoleQuery = "DELETE FROM USERTOROLE WHERE USERID = (SELECT ID FROM USERS WHERE USERNAME = ?);";
-        String insertUserRoleQuery = "INSERT INTO USERTOROLE (USERID, ROLEID) VALUES((SELECT ID FROM USERS WHERE USERNAME = ?), (SELECT ID FROM ROLES WHERE NAME = ?));";
+        String insertUserRoleQuery = "INSERT INTO USERTOROLE (USERID, ROLEID) VALUES((SELECT ID FROM USERS" +
+                " WHERE USERNAME = ?), (SELECT ID FROM ROLES WHERE NAME = ?));";
         jdbcTemplate.update(updateUserQuery,
                 user.getPassword(),
                 user.getEmail(),
@@ -202,5 +209,9 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     @Override
     public User findById(Long id) {
         return null;
+    }
+
+    private boolean doesUserExist(String userName) {
+        return jdbcTemplate.queryForRowSet("SELECT * FROM USERS WHERE USERNAME = ?;", userName).next();
     }
 }
