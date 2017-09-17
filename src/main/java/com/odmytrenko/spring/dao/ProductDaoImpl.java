@@ -76,6 +76,10 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product create(Product product) {
+        String productName = product.getName();
+        if(productName.isEmpty()) {
+            throw new RuntimeException("Name of a product can't be empty");
+        }
         String createQuery = "INSERT INTO PRODUCTS (NAME, DESCRIPTION, CATEGORYID) VALUES(?, ?, ?);";
         jdbcTemplate.update(createQuery,
                 product.getName(),
