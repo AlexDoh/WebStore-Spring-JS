@@ -49,6 +49,9 @@ public class CategoryDaoImpl extends AbstractDao<Category> implements CategoryDa
     @Override
     public Category create(Category category) {
         String categoryName = category.getName();
+        if(categoryName.isEmpty()) {
+            throw new RuntimeException("Name of a category can't be empty");
+        }
         if (doesCategoryExist(categoryName)) {
             throw new RuntimeException("Such category is already exist");
         }
