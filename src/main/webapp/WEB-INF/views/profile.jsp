@@ -12,7 +12,6 @@
     <title>Registration</title>
 
     <link href="<c:url value="/resources/bootstrap/css/bootstrap.css"/>" rel="stylesheet">
-    <%--<link href="<c:url value="/resources/bootstrap/css/bootstrap-imageupload.css"/>" rel="stylesheet">--%>
     <link href="<c:url value="/resources/bootstrap/css/profile.css"/>" rel="stylesheet">
 
 </head>
