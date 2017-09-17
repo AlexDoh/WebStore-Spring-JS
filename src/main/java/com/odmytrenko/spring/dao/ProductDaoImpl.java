@@ -77,12 +77,15 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Product create(Product product) {
         String productName = product.getName();
-        if(productName.isEmpty()) {
+        if (productName.isEmpty()) {
             throw new RuntimeException("Name of a product can't be empty");
+        }
+        if (doesProductExist(productName, product.getCategory().getId())) {
+            throw new RuntimeException("Such product is already exist");
         }
         String createQuery = "INSERT INTO PRODUCTS (NAME, DESCRIPTION, CATEGORYID) VALUES(?, ?, ?);";
         jdbcTemplate.update(createQuery,
-                product.getName(),
+                productName,
                 product.getDescription(),
                 product.getCategory().getId()
         );
@@ -91,9 +94,13 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product delete(Product product) {
+        String productName = product.getName();
+        if (doesProductExist(productName, product.getCategory().getId())) {
+            throw new RuntimeException("Such product is already exist");
+        }
         String deleteQuery = "DELETE FROM PRODUCTS WHERE NAME = ? AND CATEGORYID = ?";
         jdbcTemplate.update(deleteQuery,
-                product.getName(),
+                productName,
                 product.getCategory().getId()
         );
         return product;
@@ -144,5 +151,12 @@ public class ProductDaoImpl implements ProductDao {
             return product;
         });
         return new HashSet<>(results);
+    }
+
+    private boolean doesProductExist(String productName, Long categoryId) {
+        return jdbcTemplate.queryForRowSet("SELECT * FROM PRODUCTS WHERE NAME = ? AND CATEGORYID = ?;",
+                productName,
+                categoryId
+        ).next();
     }
 }
