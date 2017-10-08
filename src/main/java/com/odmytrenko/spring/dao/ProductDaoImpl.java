@@ -3,6 +3,7 @@ package com.odmytrenko.spring.dao;
 import com.odmytrenko.spring.model.Category;
 import com.odmytrenko.spring.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
+@DependsOn(value = "categoryDaoImpl")
 public class ProductDaoImpl implements ProductDao {
 
     @Autowired
