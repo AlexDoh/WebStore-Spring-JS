@@ -9,7 +9,7 @@
         <description>Location to store uploaded images</description>
         <param-name>imageStore</param-name>
         <param-value>
-            C:\Users\Alex\IdeaProjects\JavaHomeTasks\WebStore-Spring-JS\src\main\java\data\images\
+            C:\Java\repo\WebStore-Spring-JS\src\main\java\data\images
         </param-value>
     </context-param>
 
