@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Registration</title>
+    <title>Profile</title>
 
     <link href="<c:url value="/resources/bootstrap/css/bootstrap.css"/>" rel="stylesheet">
     <link href="<c:url value="/resources/bootstrap/css/profile.css"/>" rel="stylesheet">
