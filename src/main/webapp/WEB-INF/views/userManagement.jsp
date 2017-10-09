@@ -111,7 +111,6 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="/resources/bootstrap/js/bootstrap.min.js"></script>
 <script src="/resources/bootstrap/js/popper.min.js"></script>
-<script src="/resources/bootstrap/js/bootstrap-imageupload.js"></script>
 <script src="/resources/bootstrap/js/profile.js"></script>
 </body>
 </html>
