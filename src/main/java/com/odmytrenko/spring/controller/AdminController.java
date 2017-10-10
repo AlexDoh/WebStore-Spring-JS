@@ -72,8 +72,9 @@ public class AdminController {
     @RequestMapping(value = "/adminconsole/manageuser")
     public ModelAndView updateUser(@ModelAttribute("user") User user) {
         ModelAndView mv = new ModelAndView();
-        user.setRoles(userService.getByUsernameAndPassword(user.getName(), user.getPassword()).getRoles());
-        mv.addObject("user", user);
+        User resultUser = userService.getByUsernameAndPassword(user.getName(), user.getPassword());
+        user.setRoles(resultUser.getRoles());
+        mv.addObject("user", resultUser);
         mv.addObject("allRoles", Roles.values());
         mv.setViewName("manageUser");
         return mv;
