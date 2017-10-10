@@ -1,14 +1,12 @@
 package com.odmytrenko.spring.controller;
 
+import com.odmytrenko.spring.model.Roles;
 import com.odmytrenko.spring.model.User;
 import com.odmytrenko.spring.service.ImageService;
 import com.odmytrenko.spring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -54,6 +52,38 @@ public class UserController {
             mv.setViewName("profile");
             mv.addObject("user", userInput);
         }
+        return mv;
+    }
+
+    @RequestMapping(value = "/profile/settings/")
+    public ModelAndView profileSettings() {
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("user", new User());
+        mv.setViewName("home");
+        return mv;
+    }
+
+    @RequestMapping(value = "/profile/settings")
+    public ModelAndView profileSettings(@RequestAttribute("user") User user) {
+        ModelAndView mv = new ModelAndView();
+        User resultUser = userService.getByUsernameAndPassword(user.getName(), user.getPassword());
+        user.setRoles(resultUser.getRoles());
+        mv.addObject("user", resultUser);
+        mv.addObject("allRoles", Roles.values());
+        mv.setViewName("settings");
+        return mv;
+    }
+
+    @RequestMapping(value = "/profile/settings", method = RequestMethod.POST)
+    public ModelAndView profileSettingsMenu(@ModelAttribute("user") User user, @RequestParam CommonsMultipartFile image) {
+        userService.update(user);
+        if (image.getSize() != 0) {
+            imageService.imageUpload(image, user.getName());
+        }
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("name", user.getName());
+        mv.addObject("type", "User");
+        mv.setViewName("performedAction");
         return mv;
     }
 
