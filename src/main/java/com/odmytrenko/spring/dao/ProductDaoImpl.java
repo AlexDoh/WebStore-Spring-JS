@@ -97,8 +97,8 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Product delete(Product product) {
         String productName = product.getName();
-        if (doesProductExist(productName, product.getCategory().getId())) {
-            throw new RuntimeException("Such product is already exist");
+        if (!doesProductExist(productName, product.getCategory().getId())) {
+            throw new RuntimeException("Such product doesn't exist");
         }
         String deleteQuery = "DELETE FROM PRODUCTS WHERE NAME = ? AND CATEGORYID = ?";
         jdbcTemplate.update(deleteQuery,
