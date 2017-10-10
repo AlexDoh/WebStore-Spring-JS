@@ -27,13 +27,8 @@ public class ProfileInterceptor extends HandlerInterceptorAdapter {
                 String name = c.getName().toUpperCase();
                 if (name.equals("TOKEN")) {
                     String token = c.getValue();
-                    try {
-                        User user = userDao.findByToken(token);
-                        request.setAttribute("user", user);
-                        request.getRequestDispatcher("/WEB-INF/views/profile.jsp").forward(request, response);
-                    } catch (ServletException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    User user = userDao.findByToken(token);
+                    request.setAttribute("user", user);
                 }
             });
             return true;
