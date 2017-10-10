@@ -29,7 +29,7 @@ public class AdminController {
     @Autowired
     private ImageService imageService;
 
-    @RequestMapping(value = "/adminconsole")
+    @RequestMapping(value = {"/adminconsole", "/adminconsole/deleteuser/", "/adminconsole/manageuser/", "/adminconsole/managecategory", "/adminconsole/manageproduct"})
     public ModelAndView admin() {
         ModelAndView mv = new ModelAndView();
         mv.addObject("category", new Category());
@@ -46,13 +46,6 @@ public class AdminController {
         mv.addObject("user", new User());
         mv.addObject("users", userService.getAll());
         mv.setViewName("userManagement");
-        return mv;
-    }
-
-    @RequestMapping(value = "/adminconsole/deleteuser/")
-    public ModelAndView deleteUserReturn() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("adminConsole");
         return mv;
     }
 
@@ -73,13 +66,6 @@ public class AdminController {
         mv.addObject("name", userName);
         mv.addObject("type", "User");
         mv.setViewName("performedAction");
-        return mv;
-    }
-
-    @RequestMapping(value = "/adminconsole/manageuser/")
-    public ModelAndView updateUserReturn() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("adminConsole");
         return mv;
     }
 
@@ -106,17 +92,6 @@ public class AdminController {
         return mv;
     }
 
-    @RequestMapping(value = "/adminconsole/managecategory")
-    public ModelAndView manageCategory() {
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("category", new Category());
-        mv.addObject("product", new Product());
-        mv.addObject("categories", categoryService.getAll());
-        mv.addObject("products", productService.getAll());
-        mv.setViewName("adminConsole");
-        return mv;
-    }
-
     @RequestMapping(value = "/adminconsole/managecategory", method = RequestMethod.POST)
     public ModelAndView manageCategory(@ModelAttribute("category") Category category, @RequestParam String action) {
         switch (action) {
@@ -131,17 +106,6 @@ public class AdminController {
         mv.addObject("name", category.getName());
         mv.addObject("type", "Category");
         mv.setViewName("performedAction");
-        return mv;
-    }
-
-    @RequestMapping(value = "/adminconsole/manageproduct")
-    public ModelAndView manageProduct() {
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("category", new Category());
-        mv.addObject("product", new Product());
-        mv.addObject("categories", categoryService.getAll());
-        mv.addObject("products", productService.getAll());
-        mv.setViewName("adminConsole");
         return mv;
     }
 
