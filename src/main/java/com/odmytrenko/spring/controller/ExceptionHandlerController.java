@@ -12,7 +12,7 @@ public class ExceptionHandlerController {
     @ExceptionHandler(value = {Exception.class, RuntimeException.class})
     public ModelAndView defaultErrorHandler(Exception e) {
         ModelAndView mv = new ModelAndView(DEFAULT_ERROR_VIEW);
-        mv.addObject("error", e);
+        mv.addObject("error", e.getMessage());
         mv.setViewName("error");
         return mv;
     }
