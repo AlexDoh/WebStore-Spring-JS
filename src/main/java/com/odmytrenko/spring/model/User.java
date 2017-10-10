@@ -1,14 +1,37 @@
 package com.odmytrenko.spring.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
+import javax.persistence.EnumType;
+import javax.persistence.ManyToMany;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Table(name = "USERS")
 public class User extends Model {
 
+    @Column(name = "PASSWORD")
     private String password;
+    @Column(name = "TOKEN")
     private String token;
+    @Column(name = "EMAIL")
     private String email;
+    @Enumerated(EnumType.STRING)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "USERTOROLE",
+            joinColumns = {@JoinColumn(name = "USERID", nullable = false, updatable = false) },
+            inverseJoinColumns = { @JoinColumn(name = "ROLEID", nullable = false, updatable = false) })
     private Set<Roles> roles = new HashSet<>();
+
+    public User() {}
 
     public String getPassword() {
         return password;

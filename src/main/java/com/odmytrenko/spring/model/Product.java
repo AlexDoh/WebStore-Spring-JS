@@ -1,8 +1,21 @@
 package com.odmytrenko.spring.model;
 
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+
+@Entity
+@Table(name = "PRODUCTS")
 public class Product extends Model {
 
+    @Column(name = "DESCRIPTION")
     private String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CATEGORYID")
     private Category category;
 
     public String getDescription() {

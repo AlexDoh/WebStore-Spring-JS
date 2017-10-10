@@ -1,9 +1,16 @@
 package com.odmytrenko.spring.model;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
+@Entity
+@Table(name = "CATEGORIES")
 public class Category extends Model {
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private Set<Product> productList;
 
     public Set<Product> getProductList() {
