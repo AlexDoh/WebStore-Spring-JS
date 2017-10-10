@@ -69,8 +69,7 @@
                     <td>${u.id}</td>
                     <td>${u.name}</td>
                     <td>
-                        <spring:form method="get" modelAttribute="user" id="edit" action="/adminconsole/manageuser"
-                                     style="display:inline-block;margin-right:10px">
+                        <spring:form method="get" modelAttribute="user" id="edit" action="/adminconsole/manageuser">
                             <spring:hidden value="${u.name}" path="name"/>
                             <spring:hidden value="${u.password}" path="password"/>
                             <spring:button class="btn btn-primary" title="Edit user" form="edit">Edit</spring:button>
