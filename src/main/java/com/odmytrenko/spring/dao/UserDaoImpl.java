@@ -5,6 +5,7 @@ import com.odmytrenko.spring.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,8 +14,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
 @Repository
+@Transactional
 public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Autowired
@@ -24,7 +25,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         jdbcTemplate = jt;
         String createUsersTable = "CREATE TABLE IF NOT EXISTS USERS (" +
                 "   ID INT PRIMARY KEY AUTO_INCREMENT," +
-                "   USERNAME VARCHAR(30)," +
+                "   NAME VARCHAR(30)," +
                 "   TOKEN VARCHAR(255)," +
                 "   PASSWORD VARCHAR(255)," +
                 "   EMAIL VARCHAR(30)," +
@@ -44,11 +45,11 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         jdbcTemplate.execute(createRolesTable);
         jdbcTemplate.execute(createUserToRoleTable);
 
-        String user1 = "MERGE INTO USERS (USERNAME, PASSWORD, EMAIL, TOKEN, ID) VALUES(" +
+        String user1 = "MERGE INTO USERS (NAME, PASSWORD, EMAIL, TOKEN, ID) VALUES(" +
                 "'User1', '123123', 'player1@gmail.com', 'token1', 1);";
-        String user2 = "MERGE INTO USERS (USERNAME, PASSWORD, EMAIL, TOKEN, ID) VALUES(" +
+        String user2 = "MERGE INTO USERS (NAME, PASSWORD, EMAIL, TOKEN, ID) VALUES(" +
                 "'User2', '123123', 'player2@gmail.com', 'token2', 2);";
-        String user3 = "MERGE INTO USERS (USERNAME, PASSWORD, EMAIL, TOKEN, ID) VALUES(" +
+        String user3 = "MERGE INTO USERS (NAME, PASSWORD, EMAIL, TOKEN, ID) VALUES(" +
                 "'User3', '123123', 'player3@gmail.com', 'token3', 3);";
         String roles = "MERGE INTO ROLES (NAME, ID) VALUES('ADMIN', 1);" +
                 "MERGE INTO ROLES (NAME, ID) VALUES('USER', 2);" +
@@ -68,15 +69,15 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     public User getByUsernameAndPassword(String username, String password) {
         try {
             return jdbcTemplate.queryForObject(
-                    "SELECT  U.ID, U.USERNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME FROM USERS AS U" +
+                    "SELECT  U.ID, U.NAME AS UNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME AS RNAME FROM USERS AS U" +
                             " JOIN USERTOROLE AS UR ON UR.USERID=U.ID" +
                             " JOIN ROLES AS R ON R.ID = UR.ROLEID" +
-                            " WHERE U.USERNAME = ? AND U.PASSWORD = ?;",
+                            " WHERE U.NAME = ? AND U.PASSWORD = ?;",
                     new Object[]{username, password},
                     (rs, rowNum) -> {
                         User result = new User();
                         result.setId(rs.getLong("ID"));
-                        result.setName(rs.getString("USERNAME"));
+                        result.setName(rs.getString("UNAME"));
                         result.setPassword(rs.getString("PASSWORD"));
                         result.setEmail(rs.getString("EMAIL"));
                         result.setToken(rs.getString("TOKEN"));
@@ -93,7 +94,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     public User findByToken(String token) {
         try {
             return jdbcTemplate.queryForObject(
-                    "SELECT U.ID, U.USERNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME" +
+                    "SELECT U.ID, U.NAME AS UNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME AS RNAME" +
                             " FROM USERS U" +
                             " JOIN USERTOROLE UR ON UR.USERID=U.ID" +
                             " JOIN ROLES R ON R.ID = UR.ROLEID" +
@@ -102,7 +103,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                     (rs, rowNum) -> {
                         User result = new User();
                         result.setId(rs.getLong("ID"));
-                        result.setName(rs.getString("USERNAME"));
+                        result.setName(rs.getString("NAME"));
                         result.setPassword(rs.getString("PASSWORD"));
                         result.setEmail(rs.getString("EMAIL"));
                         result.setToken(rs.getString("TOKEN"));
@@ -117,7 +118,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public User updateForUser(User user) {
-        String updateUserQuery = "UPDATE USERS SET PASSWORD = ?, EMAIL = ? WHERE USERNAME = ?;";
+        String updateUserQuery = "UPDATE USERS SET PASSWORD = ?, EMAIL = ? WHERE NAME = ?;";
         jdbcTemplate.update(updateUserQuery,
                 user.getPassword(),
                 user.getEmail(),
@@ -129,13 +130,13 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     @Override
     public Set<User> getAll() {
         Map<String, User> userMap = new HashMap<>();
-        jdbcTemplate.query("SELECT U.ID, U.USERNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME" +
+        jdbcTemplate.query("SELECT U.ID, U.NAME AS UNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME AS RNAME" +
                 " FROM USERS U" +
                 " JOIN USERTOROLE UR ON UR.USERID=U.ID" +
                 " JOIN ROLES R ON R.ID = UR.ROLEID", (rs, rowNum) -> {
             User user = new User();
-            String userName = rs.getString("USERNAME");
-            String roleName = rs.getString("NAME");
+            String userName = rs.getString("UNAME");
+            String roleName = rs.getString("RNAME");
             user.setId(rs.getLong("ID"));
             user.setName(userName);
             user.setPassword(rs.getString("PASSWORD"));
@@ -157,10 +158,10 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     private Set<Roles> getUserRolesFromQuery(ResultSet rs) throws SQLException {
         Set<Roles> roles = new HashSet<>();
-        roles.add(Roles.valueOf(rs.getString("NAME")));
+        roles.add(Roles.valueOf(rs.getString("RNAME")));
         try {
             while (rs.next()) {
-                roles.add(Roles.valueOf(rs.getString("NAME")));
+                roles.add(Roles.valueOf(rs.getString("RNAME")));
             }
         } catch (SQLException e) {
             throw new RuntimeException("There are problems with getting users" + e);
@@ -173,9 +174,9 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         if(doesUserExist(user.getName())) {
             throw new RuntimeException("Such user already exists");
         }
-        String createUserQuery = "INSERT INTO USERS (USERNAME, TOKEN, PASSWORD, EMAIL) VALUES(?, ?, ?, ?);";
+        String createUserQuery = "INSERT INTO USERS (NAME, TOKEN, PASSWORD, EMAIL) VALUES(?, ?, ?, ?);";
         String addRoleQuery = "INSERT INTO USERTOROLE (USERID, ROLEID) VALUES(" +
-                "(SELECT ID FROM USERS WHERE USERNAME = ?), 2);";
+                "(SELECT ID FROM USERS WHERE NAME = ?), 2);";
         jdbcTemplate.update(createUserQuery,
                 user.getName(),
                 user.getToken(),
@@ -191,8 +192,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         if(!doesUserExist(user.getName())) {
             throw new RuntimeException("There is no such user");
         }
-        String deleteUserRoleQuery = "DELETE FROM USERTOROLE WHERE USERID = (SELECT ID FROM USERS WHERE USERNAME = ?);";
-        String deleteUserQuery = "DELETE FROM USERS WHERE USERNAME = ?;";
+        String deleteUserRoleQuery = "DELETE FROM USERTOROLE WHERE USERID = (SELECT ID FROM USERS WHERE NAME = ?);";
+        String deleteUserQuery = "DELETE FROM USERS WHERE NAME = ?;";
         jdbcTemplate.update(deleteUserRoleQuery, user.getName());
         jdbcTemplate.update(deleteUserQuery, user.getName());
         return user;
@@ -200,10 +201,10 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public User update(User user) {
-        String updateUserQuery = "UPDATE USERS SET PASSWORD = ?, EMAIL = ? WHERE USERNAME = ?;";
-        String deleteUserRoleQuery = "DELETE FROM USERTOROLE WHERE USERID = (SELECT ID FROM USERS WHERE USERNAME = ?);";
+        String updateUserQuery = "UPDATE USERS SET PASSWORD = ?, EMAIL = ? WHERE NAME = ?;";
+        String deleteUserRoleQuery = "DELETE FROM USERTOROLE WHERE USERID = (SELECT ID FROM USERS WHERE NAME = ?);";
         String insertUserRoleQuery = "INSERT INTO USERTOROLE (USERID, ROLEID) VALUES((SELECT ID FROM USERS" +
-                " WHERE USERNAME = ?), (SELECT ID FROM ROLES WHERE NAME = ?));";
+                " WHERE NAME = ?), (SELECT ID FROM ROLES WHERE NAME = ?));";
         jdbcTemplate.update(updateUserQuery,
                 user.getPassword(),
                 user.getEmail(),
@@ -223,6 +224,6 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     }
 
     private boolean doesUserExist(String userName) {
-        return jdbcTemplate.queryForRowSet("SELECT * FROM USERS WHERE USERNAME = ?;", userName).next();
+        return jdbcTemplate.queryForRowSet("SELECT * FROM USERS WHERE NAME = ?;", userName).next();
     }
 }
