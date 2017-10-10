@@ -8,4 +8,6 @@ public interface UserDao extends GenericDao<User> {
 
     User findByToken(String token);
 
+    User updateForUser(User user);
+
 }

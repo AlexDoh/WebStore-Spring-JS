@@ -74,14 +74,6 @@
                 <c:out value="${r}"/>
             </c:forEach>
         </div>
-        <div class="editField">
-            <h5>Set new Roles :</h5>
-            <spring:select class="form-control" multiple="true" title="Add roles" name="roles" form="update" path="roles">
-                <c:forEach items="${allRoles}" var="r">
-                    <spring:option value="${r}">${r}</spring:option>
-                </c:forEach>
-            </spring:select>
-        </div>
         <div class="imageupload panel panel-default">
             <div class="panel-heading clearfix">
                 <h3 class="panel-title pull-left">Update Image</h3>

@@ -116,6 +116,17 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     }
 
     @Override
+    public User updateForUser(User user) {
+        String updateUserQuery = "UPDATE USERS SET PASSWORD = ?, EMAIL = ? WHERE USERNAME = ?;";
+        jdbcTemplate.update(updateUserQuery,
+                user.getPassword(),
+                user.getEmail(),
+                user.getName()
+        );
+        return user;
+    }
+
+    @Override
     public Set<User> getAll() {
         Map<String, User> userMap = new HashMap<>();
         jdbcTemplate.query("SELECT U.ID, U.USERNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME" +

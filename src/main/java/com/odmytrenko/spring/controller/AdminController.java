@@ -52,7 +52,7 @@ public class AdminController {
     @RequestMapping(value = "/adminconsole/deleteuser/")
     public ModelAndView deleteUserReturn() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("userManagement");
+        mv.setViewName("adminConsole");
         return mv;
     }
 
@@ -79,7 +79,7 @@ public class AdminController {
     @RequestMapping(value = "/adminconsole/manageuser/")
     public ModelAndView updateUserReturn() {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("userManagement");
+        mv.setViewName("adminConsole");
         return mv;
     }
 
@@ -87,7 +87,6 @@ public class AdminController {
     public ModelAndView updateUser(@ModelAttribute("user") User user) {
         ModelAndView mv = new ModelAndView();
         User resultUser = userService.getByUsernameAndPassword(user.getName(), user.getPassword());
-        user.setRoles(resultUser.getRoles());
         mv.addObject("user", resultUser);
         mv.addObject("allRoles", Roles.values());
         mv.setViewName("manageUser");

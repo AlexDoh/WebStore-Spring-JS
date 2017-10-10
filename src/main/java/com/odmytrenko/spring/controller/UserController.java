@@ -67,7 +67,6 @@ public class UserController {
     public ModelAndView profileSettings(@RequestAttribute("user") User user) {
         ModelAndView mv = new ModelAndView();
         User resultUser = userService.getByUsernameAndPassword(user.getName(), user.getPassword());
-        user.setRoles(resultUser.getRoles());
         mv.addObject("user", resultUser);
         mv.addObject("allRoles", Roles.values());
         mv.setViewName("settings");
@@ -76,7 +75,7 @@ public class UserController {
 
     @RequestMapping(value = "/profile/settings", method = RequestMethod.POST)
     public ModelAndView profileSettingsMenu(@ModelAttribute("user") User user, @RequestParam CommonsMultipartFile image) {
-        userService.update(user);
+        userService.updateForUser(user);
         if (image.getSize() != 0) {
             imageService.imageUpload(image, user.getName());
         }

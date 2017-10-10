@@ -8,4 +8,6 @@ public interface UserService extends GenericService<User> {
 
     User findByToken(String token);
 
+    User updateForUser(User user);
+
 }
