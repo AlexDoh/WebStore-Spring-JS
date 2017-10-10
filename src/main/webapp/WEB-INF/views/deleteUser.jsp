@@ -12,7 +12,6 @@
     <title>Delete user</title>
 
     <link href="<c:url value="/resources/bootstrap/css/bootstrap.min.css"/>" rel="stylesheet">
-    <link href="<c:url value="/resources/bootstrap/css/userManagement.css"/>" rel="stylesheet">
 
 </head>
 <body>
