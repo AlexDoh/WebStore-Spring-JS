@@ -1,15 +1,6 @@
 package com.odmytrenko.spring.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
-import javax.persistence.EnumType;
-import javax.persistence.ManyToMany;
-import javax.persistence.FetchType;
-import javax.persistence.CascadeType;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,13 +14,12 @@ public class User extends Model {
     private String token;
     @Column(name = "EMAIL")
     private String email;
-    @Enumerated(EnumType.STRING)
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "USERTOROLE",
             joinColumns = {@JoinColumn(name = "USERID", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "ROLEID", nullable = false, updatable = false) })
-    private Set<Roles> roles = new HashSet<>();
+    private Set<RolesClassWrapper> roles = new HashSet<>();
 
     public User() {}
 
@@ -57,11 +47,11 @@ public class User extends Model {
         this.email = email;
     }
 
-    public Set<Roles> getRoles() {
+    public Set<RolesClassWrapper> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Roles> roles) {
+    public void setRoles(Set<RolesClassWrapper> roles) {
         this.roles = roles;
     }
 
