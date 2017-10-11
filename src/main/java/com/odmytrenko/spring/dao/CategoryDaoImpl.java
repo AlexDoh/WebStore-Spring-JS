@@ -21,7 +21,7 @@ public class CategoryDaoImpl extends AbstractDao<Category> implements CategoryDa
     public CategoryDaoImpl(JdbcTemplate jt) {
         jdbcTemplate = jt;
         String createCategoriesTable = "CREATE TABLE IF NOT EXISTS CATEGORIES (" +
-                " ID INT PRIMARY KEY AUTO_INCREMENT," +
+                " ID BIGINT PRIMARY KEY AUTO_INCREMENT," +
                 " NAME VARCHAR(30)" +
                 ");";
         jdbcTemplate.execute(createCategoriesTable);

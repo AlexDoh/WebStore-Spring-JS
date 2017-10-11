@@ -1,7 +1,8 @@
 package com.odmytrenko.spring.dao;
 
-import com.odmytrenko.spring.model.Roles;
+import com.odmytrenko.spring.model.RolesClassWrapper;
 import com.odmytrenko.spring.model.User;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,22 +21,24 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SessionFactory sessionFactory;
 
     public UserDaoImpl(JdbcTemplate jt) {
         jdbcTemplate = jt;
         String createUsersTable = "CREATE TABLE IF NOT EXISTS USERS (" +
-                "   ID INT PRIMARY KEY AUTO_INCREMENT," +
+                "   ID BIGINT PRIMARY KEY AUTO_INCREMENT," +
                 "   NAME VARCHAR(30)," +
                 "   TOKEN VARCHAR(255)," +
                 "   PASSWORD VARCHAR(255)," +
                 "   EMAIL VARCHAR(30)," +
                 ");";
         String createRolesTable = "CREATE TABLE IF NOT EXISTS ROLES (" +
-                "   ID INT PRIMARY KEY AUTO_INCREMENT," +
+                "   ID BIGINT PRIMARY KEY AUTO_INCREMENT," +
                 "   NAME VARCHAR(30)" +
                 ");";
         String createUserToRoleTable = "CREATE TABLE IF NOT EXISTS USERTOROLE (" +
-                "   ID INT PRIMARY KEY AUTO_INCREMENT," +
+                "   ID BIGINT PRIMARY KEY AUTO_INCREMENT," +
                 "   USERID INT," +
                 "   ROLEID INT," +
                 "   FOREIGN KEY (ROLEID) REFERENCES ROLES(ID)," +
@@ -144,10 +147,10 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
             user.setToken(rs.getString("TOKEN"));
             if (userMap.containsKey(userName)) {
                 userMap.get(userName).getRoles().add(
-                        Roles.valueOf(roleName));
+                        RolesClassWrapper.valueOf(roleName));
             } else {
-                Set<Roles> roles = new HashSet<>();
-                roles.add(Roles.valueOf(roleName));
+                Set<RolesClassWrapper> roles = new HashSet<>();
+                roles.add(RolesClassWrapper.valueOf(roleName));
                 user.setRoles(roles);
                 userMap.put(userName, user);
             }
@@ -156,12 +159,12 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         return new HashSet<>(userMap.values());
     }
 
-    private Set<Roles> getUserRolesFromQuery(ResultSet rs) throws SQLException {
-        Set<Roles> roles = new HashSet<>();
-        roles.add(Roles.valueOf(rs.getString("RNAME")));
+    private Set<RolesClassWrapper> getUserRolesFromQuery(ResultSet rs) throws SQLException {
+        Set<RolesClassWrapper> roles = new HashSet<>();
+        roles.add(RolesClassWrapper.valueOf(rs.getString("RNAME")));
         try {
             while (rs.next()) {
-                roles.add(Roles.valueOf(rs.getString("RNAME")));
+                roles.add(RolesClassWrapper.valueOf(rs.getString("RNAME")));
             }
         } catch (SQLException e) {
             throw new RuntimeException("There are problems with getting users" + e);
@@ -211,7 +214,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                 user.getName()
         );
         jdbcTemplate.update(deleteUserRoleQuery, user.getName());
-        user.getRoles().stream().map(Enum::toString).forEach(r -> jdbcTemplate.update(insertUserRoleQuery,
+        user.getRoles().stream().map(RolesClassWrapper::getName).forEach(r -> jdbcTemplate.update(insertUserRoleQuery,
                 user.getName(),
                 r
         ));

@@ -24,10 +24,10 @@ public class ProductDaoImpl implements ProductDao {
     public ProductDaoImpl(JdbcTemplate jt) {
         jdbcTemplate = jt;
         String createProductsTable = "CREATE TABLE IF NOT EXISTS PRODUCTS (" +
-                " ID INT PRIMARY KEY AUTO_INCREMENT," +
+                " ID BIGINT PRIMARY KEY AUTO_INCREMENT," +
                 " NAME VARCHAR(30)," +
                 " DESCRIPTION VARCHAR(255)," +
-                " CATEGORYID INT," +
+                " CATEGORYID BIGINT," +
                 " FOREIGN KEY (CATEGORYID) REFERENCES CATEGORIES(ID)" +
                 ");";
         jdbcTemplate.execute(createProductsTable);
