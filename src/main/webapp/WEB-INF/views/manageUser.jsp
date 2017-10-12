@@ -58,6 +58,8 @@
                  enctype="multipart/form-data">
         <h2 class="form-signin-heading text-center">Enter new values for ${user.name}</h2>
         <spring:hidden name="userName" value="${user.name}" path="name"/>
+        <spring:hidden value="${user.token}" path="token"/>
+        <spring:hidden value="${user.id}" path="id"/>
         <div class="editField">
             <h5>User password :</h5>
             <spring:label path="password" class="sr-only">Password</spring:label>
@@ -71,14 +73,14 @@
         <div class="editField">
             <h5 id="showUserRoles">User roles :</h5>
             <c:forEach var="r" items="${user.roles}">
-                <c:out value="${r}"/>
+                <c:out value="${r.name}"/>
             </c:forEach>
         </div>
         <div class="editField">
             <h5>Set new Roles :</h5>
             <spring:select class="form-control" multiple="true" title="Add roles" name="roles" form="update" path="roles">
                 <c:forEach items="${allRoles}" var="r">
-                    <spring:option value="${r}">${r}</spring:option>
+                    <spring:option value="${r}">${r.name}</spring:option>
                 </c:forEach>
             </spring:select>
         </div>

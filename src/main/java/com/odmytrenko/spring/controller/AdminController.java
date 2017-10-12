@@ -4,6 +4,7 @@ import com.odmytrenko.spring.model.Category;
 import com.odmytrenko.spring.model.Product;
 import com.odmytrenko.spring.model.Roles;
 import com.odmytrenko.spring.model.User;
+import com.odmytrenko.spring.model.RolesClassWrapper;
 import com.odmytrenko.spring.service.CategoryService;
 import com.odmytrenko.spring.service.ImageService;
 import com.odmytrenko.spring.service.ProductService;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 @Controller
 public class AdminController {
 
@@ -29,7 +33,8 @@ public class AdminController {
     @Autowired
     private ImageService imageService;
 
-    @RequestMapping(value = {"/adminconsole", "/adminconsole/deleteuser/", "/adminconsole/manageuser/", "/adminconsole/managecategory", "/adminconsole/manageproduct"})
+    @RequestMapping(value = {"/adminconsole", "/adminconsole/deleteuser/", "/adminconsole/manageuser/",
+            "/adminconsole/managecategory", "/adminconsole/manageproduct"})
     public ModelAndView admin() {
         ModelAndView mv = new ModelAndView();
         mv.addObject("category", new Category());
@@ -74,7 +79,8 @@ public class AdminController {
         ModelAndView mv = new ModelAndView();
         User resultUser = userService.getByUsernameAndPassword(user.getName(), user.getPassword());
         mv.addObject("user", resultUser);
-        mv.addObject("allRoles", Roles.values());
+        mv.addObject("allRoles", Arrays.stream(Roles.values()).map(RolesClassWrapper::wrapRole)
+                .collect(Collectors.toSet()));
         mv.setViewName("manageUser");
         return mv;
     }

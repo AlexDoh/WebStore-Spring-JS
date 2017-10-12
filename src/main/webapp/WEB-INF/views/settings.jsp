@@ -71,7 +71,7 @@
         <div class="editField">
             <h5 id="showUserRoles">User roles :</h5>
             <c:forEach var="r" items="${user.roles}">
-                <c:out value="${r}"/>
+                <c:out value="${r.name}"/>
             </c:forEach>
         </div>
         <div class="imageupload panel panel-default">

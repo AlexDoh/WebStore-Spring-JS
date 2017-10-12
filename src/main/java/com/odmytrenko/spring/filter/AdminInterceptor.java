@@ -2,6 +2,7 @@ package com.odmytrenko.spring.filter;
 
 import com.odmytrenko.spring.dao.UserDao;
 import com.odmytrenko.spring.model.Roles;
+import com.odmytrenko.spring.model.RolesClassWrapper;
 import com.odmytrenko.spring.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -24,7 +25,7 @@ public class AdminInterceptor extends HandlerInterceptorAdapter {
         if (cookies != null && Arrays.stream(cookies).anyMatch(p -> p.getName().equals("TOKEN"))) {
             User user = userDao.findByToken(Arrays.stream(cookies).filter(p -> p.getName().equals("TOKEN")).
                     findFirst().get().getValue());
-            if (!user.getRoles().contains(Roles.ADMIN)) {
+            if (!user.getRoles().contains(RolesClassWrapper.wrapRole(Roles.ADMIN))) {
                 throw new RuntimeException("User doesn't have privileges to enter this page");
             } else {
                 return true;

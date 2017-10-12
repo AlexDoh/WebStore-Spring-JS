@@ -1,5 +1,6 @@
 package com.odmytrenko.spring.dao;
 
+import com.odmytrenko.spring.model.Roles;
 import com.odmytrenko.spring.model.RolesClassWrapper;
 import com.odmytrenko.spring.model.User;
 import org.hibernate.SessionFactory;
@@ -8,11 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @Repository
@@ -71,23 +68,11 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     @Override
     public User getByUsernameAndPassword(String username, String password) {
         try {
-            return jdbcTemplate.queryForObject(
-                    "SELECT  U.ID, U.NAME AS UNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME AS RNAME FROM USERS AS U" +
-                            " JOIN USERTOROLE AS UR ON UR.USERID=U.ID" +
-                            " JOIN ROLES AS R ON R.ID = UR.ROLEID" +
-                            " WHERE U.NAME = ? AND U.PASSWORD = ?;",
-                    new Object[]{username, password},
-                    (rs, rowNum) -> {
-                        User result = new User();
-                        result.setId(rs.getLong("ID"));
-                        result.setName(rs.getString("UNAME"));
-                        result.setPassword(rs.getString("PASSWORD"));
-                        result.setEmail(rs.getString("EMAIL"));
-                        result.setToken(rs.getString("TOKEN"));
-                        result.setRoles(getUserRolesFromQuery(rs));
-                        return result;
-                    }
-            );
+            String query = "from User where name =:name and password =:password";
+            return (User) sessionFactory.getCurrentSession().createQuery(query)
+                    .setParameter("name", username)
+                    .setParameter("password", password)
+                    .uniqueResult();
         } catch (Exception e) {
             throw new RuntimeException("User with such login and password doesn't exist!");
         }
@@ -96,24 +81,10 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     @Override
     public User findByToken(String token) {
         try {
-            return jdbcTemplate.queryForObject(
-                    "SELECT U.ID, U.NAME AS UNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME AS RNAME" +
-                            " FROM USERS U" +
-                            " JOIN USERTOROLE UR ON UR.USERID=U.ID" +
-                            " JOIN ROLES R ON R.ID = UR.ROLEID" +
-                            " WHERE U.TOKEN = ?;",
-                    new Object[]{token},
-                    (rs, rowNum) -> {
-                        User result = new User();
-                        result.setId(rs.getLong("ID"));
-                        result.setName(rs.getString("NAME"));
-                        result.setPassword(rs.getString("PASSWORD"));
-                        result.setEmail(rs.getString("EMAIL"));
-                        result.setToken(rs.getString("TOKEN"));
-                        result.setRoles(getUserRolesFromQuery(rs));
-                        return result;
-                    }
-            );
+            String query = "from User where token =:token";
+            return (User) sessionFactory.getCurrentSession().createQuery(query)
+                    .setParameter("token", token)
+                    .uniqueResult();
         } catch (Exception e) {
             throw new RuntimeException("You have corrupted cookies in the browser, please clean them");
         }
@@ -121,103 +92,50 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public User updateForUser(User user) {
-        String updateUserQuery = "UPDATE USERS SET PASSWORD = ?, EMAIL = ? WHERE NAME = ?;";
-        jdbcTemplate.update(updateUserQuery,
-                user.getPassword(),
-                user.getEmail(),
-                user.getName()
-        );
+        String query = "update User baseUser set baseUser.password =:password, baseUser.email =:email" +
+                " where baseUser.name =:name";
+        sessionFactory.getCurrentSession().createQuery(query)
+                .setParameter("password", user.getPassword())
+                .setParameter("email", user.getEmail())
+                .setParameter("name", user.getName())
+                .executeUpdate();
         return user;
     }
 
     @Override
     public Set<User> getAll() {
-        Map<String, User> userMap = new HashMap<>();
-        jdbcTemplate.query("SELECT U.ID, U.NAME AS UNAME, U.PASSWORD, U.TOKEN, U.EMAIL, R.NAME AS RNAME" +
-                " FROM USERS U" +
-                " JOIN USERTOROLE UR ON UR.USERID=U.ID" +
-                " JOIN ROLES R ON R.ID = UR.ROLEID", (rs, rowNum) -> {
-            User user = new User();
-            String userName = rs.getString("UNAME");
-            String roleName = rs.getString("RNAME");
-            user.setId(rs.getLong("ID"));
-            user.setName(userName);
-            user.setPassword(rs.getString("PASSWORD"));
-            user.setEmail(rs.getString("EMAIL"));
-            user.setToken(rs.getString("TOKEN"));
-            if (userMap.containsKey(userName)) {
-                userMap.get(userName).getRoles().add(
-                        RolesClassWrapper.valueOf(roleName));
-            } else {
-                Set<RolesClassWrapper> roles = new HashSet<>();
-                roles.add(RolesClassWrapper.valueOf(roleName));
-                user.setRoles(roles);
-                userMap.put(userName, user);
-            }
-            return user;
-        });
-        return new HashSet<>(userMap.values());
-    }
-
-    private Set<RolesClassWrapper> getUserRolesFromQuery(ResultSet rs) throws SQLException {
-        Set<RolesClassWrapper> roles = new HashSet<>();
-        roles.add(RolesClassWrapper.valueOf(rs.getString("RNAME")));
-        try {
-            while (rs.next()) {
-                roles.add(RolesClassWrapper.valueOf(rs.getString("RNAME")));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("There are problems with getting users" + e);
-        }
-        return roles;
+        return new HashSet<User>(sessionFactory.getCurrentSession().createCriteria(User.class).list());
     }
 
     @Override
     public User create(User user) {
-        if(doesUserExist(user.getName())) {
-            throw new RuntimeException("Such user already exists");
+        if (doesUserExist(user.getName())) {
+            throw new RuntimeException("Such user is already exists");
         }
-        String createUserQuery = "INSERT INTO USERS (NAME, TOKEN, PASSWORD, EMAIL) VALUES(?, ?, ?, ?);";
-        String addRoleQuery = "INSERT INTO USERTOROLE (USERID, ROLEID) VALUES(" +
-                "(SELECT ID FROM USERS WHERE NAME = ?), 2);";
-        jdbcTemplate.update(createUserQuery,
-                user.getName(),
-                user.getToken(),
-                user.getPassword(),
-                user.getEmail()
-        );
-        jdbcTemplate.update(addRoleQuery, user.getName());
+        Set<RolesClassWrapper> roles = new HashSet<>();
+        RolesClassWrapper rolesClassWrapper = new RolesClassWrapper();
+        rolesClassWrapper.setName(Roles.USER);
+        rolesClassWrapper.setId(2L);
+        roles.add(rolesClassWrapper);
+        user.setRoles(roles);
+        sessionFactory.getCurrentSession().save(user);
         return user;
     }
 
     @Override
     public User delete(User user) {
-        if(!doesUserExist(user.getName())) {
+        if (!doesUserExist(user.getName())) {
             throw new RuntimeException("There is no such user");
         }
-        String deleteUserRoleQuery = "DELETE FROM USERTOROLE WHERE USERID = (SELECT ID FROM USERS WHERE NAME = ?);";
-        String deleteUserQuery = "DELETE FROM USERS WHERE NAME = ?;";
-        jdbcTemplate.update(deleteUserRoleQuery, user.getName());
-        jdbcTemplate.update(deleteUserQuery, user.getName());
+        String query = "delete User where name=:name";
+        sessionFactory.getCurrentSession().createQuery(query).setParameter("name", user.getName()).executeUpdate();
         return user;
     }
 
     @Override
     public User update(User user) {
-        String updateUserQuery = "UPDATE USERS SET PASSWORD = ?, EMAIL = ? WHERE NAME = ?;";
-        String deleteUserRoleQuery = "DELETE FROM USERTOROLE WHERE USERID = (SELECT ID FROM USERS WHERE NAME = ?);";
-        String insertUserRoleQuery = "INSERT INTO USERTOROLE (USERID, ROLEID) VALUES((SELECT ID FROM USERS" +
-                " WHERE NAME = ?), (SELECT ID FROM ROLES WHERE NAME = ?));";
-        jdbcTemplate.update(updateUserQuery,
-                user.getPassword(),
-                user.getEmail(),
-                user.getName()
-        );
-        jdbcTemplate.update(deleteUserRoleQuery, user.getName());
-        user.getRoles().stream().map(RolesClassWrapper::getName).forEach(r -> jdbcTemplate.update(insertUserRoleQuery,
-                user.getName(),
-                r
-        ));
+        user.getRoles().forEach(r -> r.setId(r.getName().ordinal() + 1L));
+        sessionFactory.getCurrentSession().update(user);
         return user;
     }
 
@@ -227,6 +145,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     }
 
     private boolean doesUserExist(String userName) {
-        return jdbcTemplate.queryForRowSet("SELECT * FROM USERS WHERE NAME = ?;", userName).next();
+       return sessionFactory.getCurrentSession().createQuery("from User where name =:name")
+               .setParameter("name", userName).uniqueResult() != null;
     }
 }

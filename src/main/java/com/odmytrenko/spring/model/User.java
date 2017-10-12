@@ -1,6 +1,13 @@
 package com.odmytrenko.spring.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +21,7 @@ public class User extends Model {
     private String token;
     @Column(name = "EMAIL")
     private String email;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "USERTOROLE",
             joinColumns = {@JoinColumn(name = "USERID", nullable = false, updatable = false) },

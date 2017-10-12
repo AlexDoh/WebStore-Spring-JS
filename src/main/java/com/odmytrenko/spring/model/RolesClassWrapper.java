@@ -1,6 +1,15 @@
 package com.odmytrenko.spring.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.ManyToMany;
+import javax.persistence.FetchType;
 import java.util.Set;
 
 @Entity
@@ -13,10 +22,10 @@ public class RolesClassWrapper {
     @Column(name = "NAME")
     @Enumerated(EnumType.STRING)
     private Roles name;
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "roles")
     private Set<User> users;
 
-    RolesClassWrapper() {}
+    public RolesClassWrapper() {}
 
     public Long getId() {
         return id;
@@ -42,9 +51,29 @@ public class RolesClassWrapper {
         this.users = users;
     }
 
-    public static RolesClassWrapper valueOf(String role) {
+    public static RolesClassWrapper wrapRole(Roles role) {
         RolesClassWrapper rolesClassWrapper = new RolesClassWrapper();
-        rolesClassWrapper.setName(Roles.valueOf(role));
+        rolesClassWrapper.setName(role);
         return rolesClassWrapper;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RolesClassWrapper that = (RolesClassWrapper) o;
+
+        return getName() == that.getName();
+    }
+
+    @Override
+    public int hashCode() {
+        return getName() != null ? getName().hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return name.toString();
     }
 }
